@@ -27,7 +27,7 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Bean
+    @Bean // declare TokenStore implements
     public TokenStore tokenStore() {
         return new JdbcTokenStore(dataSource);
     }
@@ -38,13 +38,13 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
         endpoints.authenticationManager(authenticationManager);
         endpoints.tokenStore(tokenStore());
 
-        // 配置TokenServices参数
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenStore(endpoints.getTokenStore());
+      //tokenServices do creating and setting valid  durations
+        DefaultTokenServices tokenServices = new DefaultTokenServices(); 
+        tokenServices.setTokenStore(endpoints.getTokenStore());   // to store tokens
         tokenServices.setSupportRefreshToken(false);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
-        tokenServices.setAccessTokenValiditySeconds( (int) TimeUnit.DAYS.toSeconds(30)); // 30天
+        tokenServices.setAccessTokenValiditySeconds( (int) TimeUnit.DAYS.toSeconds(30)); // set valid duration to 30 days
         endpoints.tokenServices(tokenServices);
 
     }
@@ -57,7 +57,7 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
         oauthServer.allowFormAuthenticationForClients();
     }
 
-    @Bean
+    @Bean  // declare ClientDetails implements
     public ClientDetailsService clientDetails() {
         return new JdbcClientDetailsService(dataSource);
     }
@@ -66,10 +66,21 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(clientDetails());
         clients.inMemory() // use in-memory
-                .withClient("client") // client_id
+                .withClient("client") // The client ID you received when you first created the application
                 .secret("secret") // client_secret
-                .authorizedGrantTypes("authorization_code") // authrization_type
-                .scopes("app"); // scope
+                
+                //Authorization Code for apps running on a web server, browser-based and mobile apps   
+                //Password for logging in with a username and password  
+                //Client credentials for application access
+                .authorizedGrantTypes("authorization_code", "client_credentials",  "password")
+                .scopes("app")// The scope to which the client is limited. If scope is undefined or empty (the default) the client is not limited by scope.
+                .resourceIds("oauth2-resource")
+                .accessTokenValiditySeconds(120)
+                .refreshTokenValiditySeconds(60);
+                
     }
+    
+    
+ 
 
 }

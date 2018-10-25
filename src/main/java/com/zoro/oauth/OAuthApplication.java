@@ -8,11 +8,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.util.Arrays;
 
  
 @SpringBootApplication
 @EnableAuthorizationServer
+@EnableSwagger2
 public class OAuthApplication {
     public static void main(String[] args) {
         SpringApplication.run(OAuthApplication.class, args);
