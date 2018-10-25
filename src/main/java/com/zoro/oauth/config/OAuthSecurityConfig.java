@@ -65,7 +65,11 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.withClientDetails(clientDetails());
-        clients.inMemory() // use in-memory
+        
+        /**
+         * for local use :
+         * 
+         *      clients.inMemory() // use in-memory
                 .withClient("client") // The client ID you received when you first created the application
                 .secret("secret") // client_secret
                 
@@ -77,6 +81,10 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
                 .resourceIds("oauth2-resource")
                 .accessTokenValiditySeconds(120)
                 .refreshTokenValiditySeconds(60);
+         * 
+         * 
+         * **/
+
                 
     }
     
