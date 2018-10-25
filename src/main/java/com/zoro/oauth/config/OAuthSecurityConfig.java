@@ -64,7 +64,17 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetails());
+       // clients.withClientDetails(clientDetails());
+        
+        clients.jdbc(dataSource)
+        .withClient("client")  // one default client will be create when the server start
+        .authorizedGrantTypes("authorization_code", "client_credentials", "refresh_token")
+        .authorities("USER")
+        .scopes("read", "write")
+        .resourceIds("resourceid")
+        .secret("123456").and().build();
+        
+        
         
         /**
          * for local use :
