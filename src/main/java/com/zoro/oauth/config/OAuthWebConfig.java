@@ -59,11 +59,16 @@ public class OAuthWebConfig extends WebSecurityConfigurerAdapter {
 	    
 	    
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {  //AuthenticationManager can build a inmemory auth or database auth
         auth
             .inMemoryAuthentication()
             .withUser("admin").password("admin").roles("USER");    // default user in Oauth Approval page
     }
+    
+    
+    
+    
+    
 
     @Override
     public void configure(WebSecurity web) throws Exception {

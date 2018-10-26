@@ -9,6 +9,9 @@
 4. get code in browser
 localhost:8080/oauth/authorize?client_id=wang&response_type=code&redirect_uri=http://www.facebook.com
 
+
+the default client user is admin:admin defined in OAuthWebConfig,which can be change into databae mode later,see http://www.programming-free.com/2016/01/spring-security-spring-data-jpa.html
+
 5. replace the code and get the access-token
 curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'grant_type=authorization_code&code=g8dfRP&redirect_uri=http://www.facebook.com' "http://wang:secret@localhost:8080/oauth/token"
 
