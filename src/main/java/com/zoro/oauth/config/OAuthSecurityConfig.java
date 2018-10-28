@@ -1,8 +1,13 @@
 package com.zoro.oauth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -26,6 +31,12 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource;
+    
+    @Value("classpath:schema.sql")
+    private Resource schemaScript;
+
+    @Value("classpath:data.sql")
+    private Resource dataScript;
 
     @Bean // declare TokenStore implements
     public TokenStore tokenStore() {
@@ -96,6 +107,24 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
          * **/
 
                 
+    }
+    
+    
+    
+    // init the database when start the app
+    @Bean
+    public DataSourceInitializer dataSourceInitializer(final DataSource dataSource) {
+        final DataSourceInitializer initializer = new DataSourceInitializer();
+        initializer.setDataSource(dataSource);
+        initializer.setDatabasePopulator(databasePopulator());
+        return initializer;
+    }
+
+    private DatabasePopulator databasePopulator() {
+        final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+        populator.addScript(schemaScript);
+        populator.addScript(dataScript);
+        return populator;
     }
     
     
