@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -20,6 +21,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 import javax.sql.DataSource;
+import javax.websocket.Endpoint;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -52,23 +55,25 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
       //tokenServices do creating and setting valid  durations
         DefaultTokenServices tokenServices = new DefaultTokenServices(); 
         tokenServices.setTokenStore(endpoints.getTokenStore());   // to store tokens
-        tokenServices.setSupportRefreshToken(false);
+        tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
         tokenServices.setAccessTokenValiditySeconds( (int) TimeUnit.DAYS.toSeconds(30)); // set valid duration to 30 days
         endpoints.tokenServices(tokenServices);
-
+        
+        
     }
-
-
+    
+    
+  
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        //oauthServer.checkTokenAccess("isAuthenticated()");
-        oauthServer.checkTokenAccess("permitAll()");
-        oauthServer.allowFormAuthenticationForClients();
+    public void configure(AuthorizationServerSecurityConfigurer Security) throws Exception {
+    	Security.tokenKeyAccess("permitAll()")
+         .checkTokenAccess("isAuthenticated()");
+    	Security.allowFormAuthenticationForClients();
     }
 
-    @Bean  // declare ClientDetails implements
+    @Bean  
     public ClientDetailsService clientDetails() {
         return new JdbcClientDetailsService(dataSource);
     }
@@ -77,13 +82,15 @@ public class OAuthSecurityConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
        // clients.withClientDetails(clientDetails());
         
+    	
+    	
         clients.jdbc(dataSource)
-        .withClient("client")  // one default client will be create when the server start
+        .withClient("wang")  // one default client will be create when the server start
         .authorizedGrantTypes("authorization_code", "client_credentials", "refresh_token")
         .authorities("USER")
         .scopes("read", "write")
         .resourceIds("resourceid")
-        .secret("123456").and().build();
+        .secret("123").and().build();
         
         
         
