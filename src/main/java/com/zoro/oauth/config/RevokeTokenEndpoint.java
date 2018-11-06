@@ -54,14 +54,14 @@ public class RevokeTokenEndpoint {
 	}
 	
 	     
-	@RequestMapping(method = RequestMethod.POST, value = "/oauth/token/revokeTokenByTokenId")
+	@RequestMapping(method = RequestMethod.GET, value = "/oauth/token/revokeTokenByTokenId")
 	@ResponseBody
 	public String revokeTokenByTokenId(String tokenId) {
 	    tokenServices.revokeToken(tokenId);
 	    return tokenId;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/oauth/token/revokeTokensByClientId")
+	@RequestMapping(method = RequestMethod.GET, value = "/oauth/token/revokeTokensByClientId")
 	@ResponseBody
 	public String revokeTokensByClientId(String clientId) {
 		

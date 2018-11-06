@@ -8,9 +8,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.security.Principal;
 import java.util.Arrays;
 
  
@@ -30,5 +32,10 @@ public class OAuthApplication {
     public AuthenticationManager authenticationManager() {
         return new ProviderManager(Arrays.asList(authenticationProvider));
     }
+    
+	@RequestMapping("/user")
+	public Principal user(Principal user) {
+		return user;
+	}
 
 }

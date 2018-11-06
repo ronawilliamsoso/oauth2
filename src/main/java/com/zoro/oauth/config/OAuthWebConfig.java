@@ -17,14 +17,16 @@ public class OAuthWebConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	
 	@Autowired
 	private UserDetailsService customUserDetailsService;
 
 	/* to setup HttpSecurity,like which urls are authenticated */
 	@Override
 	protected void configure(final HttpSecurity http) throws Exception {
-		http.requestMatchers().antMatchers("/login", "/oauth/authorize").and().authorizeRequests().anyRequest()
+		http.csrf().disable().requestMatchers().antMatchers("/login", "/uaa/oauth/**", "/oauth/**").and().authorizeRequests().anyRequest()
 				.authenticated().and().formLogin().permitAll();
+		 
 
 	}
 
