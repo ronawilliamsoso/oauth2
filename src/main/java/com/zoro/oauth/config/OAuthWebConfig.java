@@ -35,6 +35,11 @@ public class OAuthWebConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.parentAuthenticationManager(authenticationManager).userDetailsService(customUserDetailsService);
 	}
+	
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN");
+    }
 
 	/* to define access ignore URLs */
 	@Override

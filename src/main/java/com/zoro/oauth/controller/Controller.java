@@ -1,5 +1,7 @@
 package com.zoro.oauth.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +23,10 @@ public class Controller {
     }
 	
  
-
+	@RequestMapping("/session")
+    public String helloAdmin(HttpSession session) {
+        return "hello,session id is "+ session.getId() +"\n";
+    }
  
 
 }

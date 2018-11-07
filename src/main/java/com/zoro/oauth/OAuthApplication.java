@@ -15,24 +15,22 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.security.Principal;
 import java.util.Arrays;
 
- 
 @SpringBootApplication
 @EnableAuthorizationServer
 @EnableSwagger2
 public class OAuthApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(OAuthApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(OAuthApplication.class, args);
+	}
 
+	@Autowired
+	private AuthenticationProvider authenticationProvider;
 
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
+	@Bean
+	public AuthenticationManager authenticationManager() {
+		return new ProviderManager(Arrays.asList(authenticationProvider));
+	}
 
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        return new ProviderManager(Arrays.asList(authenticationProvider));
-    }
-    
 	@RequestMapping("/user")
 	public Principal user(Principal user) {
 		return user;
